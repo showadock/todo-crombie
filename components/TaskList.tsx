@@ -1,20 +1,15 @@
 'use client';
 
-import { useState, useEffect } from 'react';
+import { useTaskContext } from '@/context/TaskContext';
 
 export default function TaskList() {
-    const [tasks, setTasks] = useState<Array<{ id: string; title: string; user: { name: string } }>>([]);
+    const { tasks, removeTask } = useTaskContext()
 
-    useEffect(() => {
-        fetch('/api/tasks')
-            .then((res) => res.json())
-            .then((data) => setTasks(data));
-    }, []);
-
-    const handleDelete = async (id: string) => {
+    const handleDelete = async (id: number) => {
         await fetch(`/api/tasks/${id}`, { method: 'DELETE' });
-        setTasks((prev) => prev.filter((task) => task.id !== id));
+        removeTask(id)
     };
+    console.log(tasks);
 
     return (
         <div className="max-w-3xl mx-auto mt-10 p-6 bg-white rounded-lg shadow-md">

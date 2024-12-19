@@ -1,11 +1,11 @@
 'use client';
 
+import { useTaskContext } from '@/context/TaskContext';
 import { useState, useEffect } from 'react';
 
 export default function TaskForm() {
-    const [title, setTitle] = useState('');
-    const [dueDate, setDueDate] = useState('');
-    const [userId, setUserId] = useState('');
+    const { addTask } = useTaskContext()
+    const [formData, setFormData] = useState({ title: "", dueDate: "", userId: "" })
     const [users, setUsers] = useState<Array<{ id: number, name: string }>>([]);
 
     useEffect(() => {
@@ -16,12 +16,14 @@ export default function TaskForm() {
 
     const handleSubmit = async (e: any) => {
         e.preventDefault();
-        await fetch('/api/tasks', {
+        const res = await fetch('/api/tasks', {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({ title, dueDate, userId }),
+            body: JSON.stringify(formData),
         });
-        alert('Tarea creada!');
+        const newTask = await res.json()
+        addTask(newTask)
+        setFormData({ title: "", dueDate: "", userId: "" })
     };
 
     return (
@@ -31,21 +33,21 @@ export default function TaskForm() {
                 <input
                     type="text"
                     placeholder="Título"
-                    value={title}
-                    onChange={(e) => setTitle(e.target.value)}
+                    value={formData.title}
+                    onChange={(e) => setFormData({ ...formData, title: e.target.value })}
                     required
                     className="w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 text-black"
                 />
                 <input
                     type="date"
-                    value={dueDate}
-                    onChange={(e) => setDueDate(e.target.value)}
+                    value={formData.dueDate}
+                    onChange={(e) => setFormData({ ...formData, dueDate: e.target.value })}
                     required
                     className="w-full text-black px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
                 />
                 <select
-                    value={userId}
-                    onChange={(e) => setUserId(e.target.value)}
+                    value={formData.userId}
+                    onChange={(e) => setFormData({ ...formData, userId: e.target.value })}
                     required
                     className="w-full text-black px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
                 >
