@@ -22,6 +22,9 @@ export async function POST(req: Request) {
       dueDate: new Date(dueDate),
       userId: parseInt(userId),
     },
+    include: {
+      user: true,
+    },
   });
 
   return new Response(JSON.stringify(newTask), { status: 201 });
