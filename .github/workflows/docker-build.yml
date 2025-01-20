@@ -29,6 +29,6 @@ jobs:
     # Push the Docker image to a registry (optional)
     - name: Push Docker image
       run: |
-        docker tag my-app:latest showadock/my-todo-app:latest
+        docker tag my-app:latest showadock/my-app:latest
         docker push showadock/my-todo-app:v1
 
